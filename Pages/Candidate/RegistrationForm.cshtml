@@ -1,0 +1,789 @@
+﻿@page
+@model jobUet.Pages.Candidate.RegistrationFormModel
+@{
+    ViewData["Title"] = "Registration Form";
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('.gvCity').css('display', 'none');
+        $('.gvdist').css('display', 'none');
+        $(".ddlprovince").change(function (e) {
+
+
+            var dropdonw = $('.ddlprovince');
+            var provval = dropdonw.val();
+            BindCity(provval);
+            Binddist(provval);
+            $(".ddlcity").trigger('change');
+            $(".ddldistrict").trigger('change');
+        });
+        function changeText(cell) {
+            if (cell.textContent) {
+                str = cell.textContent;
+            } else if (cell.innerHTML) {
+                str = cell.innerHTML;
+            } else if (cell.innertext) {
+                str = cell.innertext;
+            }
+            return str;
+        }
+        function BindCity(provval) {
+
+            var gridctlid = '<%=gvCity.ClientID%>';
+
+            $('.ddlcity').empty();
+            $('.ddlcity').append($("<option></option>").attr("value", "--Select--").text("--Select--"));
+            ctlGridViewCity = document.getElementById(gridctlid);
+            var tableRowCount = ctlGridViewCity.rows.length;
+
+            for (i = 1; i < tableRowCount - 1; i++) {
+                currRow = ctlGridViewCity.rows[i];
+                provinceid = changeText(currRow.cells[3]); //.textContent;
+                cityName = changeText(currRow.cells[2]); //.textContent;
+                if (provinceid == provval) {
+                    $('.ddlcity').append($("<option></option>").val(cityName).html(cityName));
+                }
+            }
+
+        };
+
+
+        function Binddist(provval) {
+
+            var griddistid = '<%=gvdist.ClientID%>';
+
+            $('.ddldistrict').empty();
+            $('.ddldistrict').append($("<option></option>").attr("value", "--Select--").text("--Select--"));
+            ctlGridViewDist = document.getElementById(griddistid);
+            var tableRowCount1 = ctlGridViewDist.rows.length;
+
+            for (i = 1; i < tableRowCount1 - 1; i++) {
+                currRow = ctlGridViewDist.rows[i];
+                provinceid = changeText(currRow.cells[1]); //.textContent;
+                distName = changeText(currRow.cells[0]); //.textContent;
+                if (provinceid == provval) {
+                    $('.ddldistrict').append($("<option></option>").val(distName).html(distName));
+                }
+            }
+
+        }
+
+
+        $(".ddlcity").change(function (e) {
+            var cityval = $(".ddlcity").val();
+
+            var awID = '<%=ddlCityHidden.ClientID%>';
+            var aw = document.getElementById(awID)
+            $(aw).val(cityval);
+
+        });
+        $(".ddldistrict").change(function (e) {
+            var distval = $(".ddldistrict").val();
+
+            var dID = '<%=ddldistHidden.ClientID%>';
+            var dw = document.getElementById(dID)
+            $(dw).val(distval);
+
+        });
+
+        $(".chkCitizen").change(function () {
+            if ($('.chkCitizen').attr('checked')) {
+
+                $('.tblPakistan').css('display', 'table');
+            }
+            else {
+                $('.tblPakistan').css('display', 'none');
+            }
+
+        });
+
+        function isNumberKey(evt) {
+            alert(evt);
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+
+        $(".chkaddress").change(function () {
+            if ($('.chkaddress').attr('checked')) {
+
+                $('.txtpermAddress').val($('.txtaddress').val())
+            }
+            else {
+                $('.txtpermAddress').val('');
+            }
+
+        });
+
+    });
+</script>
+<div>
+    <center>
+
+    <br />
+<label ID="lblHeader0" runat="server" Text="Job Information" 
+        style="font-weight: 700; text-decoration: underline; color: #FF0000; font-size: medium"></label>
+    <br />
+   <blink>* 
+    <asp:Label ID="Label1" runat="server" Text="Enter All Fields" 
+        style="color: #FF0000; font-size: medium; font-style: italic;"></asp:Label>
+        </blink>
+    <br />
+
+<table border="1">
+<tr>
+<td>
+Advertisement No: 
+</td>
+<td>
+    
+<asp:DropDownList ID="ddlAdvNo" Width="250px" runat="server" 
+        style="text-align: left" AutoPostBack="True">
+</asp:DropDownList>
+</td>
+<td>Post Applied For:</td>
+<td>
+<asp:DropDownList ID="ddlAppliedFor" Width="250px" runat="server" 
+        style="text-align: left" AutoPostBack="True">
+</asp:DropDownList>
+</td>
+</tr>
+
+<tr runat="server" id="trcampus" visible="true">
+<td style="text-align: left">
+    Campus: 
+</td>
+<td style="text-align: left">
+<asp:DropDownList ID="ddlCampus" Width="250px" runat="server" AutoPostBack="True" 
+        style="margin-bottom: 0px">
+</asp:DropDownList>
+</td>
+<td style="text-align: left">Department:</td>
+<td style="text-align: left">
+<asp:DropDownList ID="ddlDepartment" Width="250px" runat="server" 
+        style="text-align: left">
+</asp:DropDownList>
+</td>
+</tr>
+
+</table>
+<br />
+<asp:Label ID="lblHeader" runat="server" Text="Personal Information" 
+        style="font-weight: 700; text-decoration: underline; color: #FF0000; font-size: medium"></asp:Label>
+<br />
+    <br />
+<table>
+<tr>
+<td style="text-align: left">
+
+    Full Name:
+
+</td>
+<td style="text-align: left">
+
+    &nbsp;</td>
+<td  style="text-align: left">
+
+    <asp:TextBox ID="txtName" Width="250px" runat="server" 
+        style="text-align: left"></asp:TextBox>
+
+    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" 
+        ControlToValidate="txtName" ErrorMessage="*" ForeColor="Red"></asp:RequiredFieldValidator>
+
+</td>
+<td style="text-align: left">
+
+    NIC:<br />
+    (Without Dashes)</td>
+<td style="text-align: left">
+
+    <asp:TextBox ID="txtNIC" onkeypress="return isNumberKey(event)" Width="250px" runat="server"  MaxLength="13"
+        style="text-align: left"></asp:TextBox>
+
+    <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" 
+        ControlToValidate="txtNIC" ErrorMessage="*" style="color: #CC0000"></asp:RequiredFieldValidator>
+
+</td>
+</tr>
+
+<tr>
+<td style="text-align: left">
+
+    Religion:</td>
+<td style="text-align: left">
+
+    &nbsp;</td>
+<td style="text-align: left">
+
+    <asp:TextBox ID="txtReligion" Width="251px" Text="ISLAM" runat="server"></asp:TextBox>
+
+    <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" 
+        ControlToValidate="txtReligion" ErrorMessage="*" style="color: #CC0000"></asp:RequiredFieldValidator>
+
+</td>
+<td style="text-align: left">
+
+    Father Name:
+
+</td>
+<td style="text-align: left">
+
+    <asp:TextBox ID="txtFName" Width="250px" runat="server" 
+        style="text-align: left"></asp:TextBox>
+
+    <asp:RequiredFieldValidator ID="RequiredFieldValidator14" runat="server" 
+        ControlToValidate="txtFName" ErrorMessage="*" style="color: #CC0000"></asp:RequiredFieldValidator>
+
+</td>
+</tr>
+
+<tr>
+<td style="text-align: left">
+
+    Father NIC::<br />
+    (Without Dashes)</td>
+<td style="text-align: left">
+
+    &nbsp;</td>
+<td style="text-align: left">
+
+    <asp:TextBox ID="txtFNic"  MaxLength="13" Width="250px" onkeypress="return isNumberKey(event)" runat="server"></asp:TextBox>
+
+    </td>
+<td style="text-align: left">
+
+Occupation</td>
+<td style="text-align: left">
+
+    <asp:TextBox ID="txtOccupation" Width="250px" runat="server" 
+        style="text-align: left"></asp:TextBox>
+
+    <asp:RequiredFieldValidator ID="RequiredFieldValidator13" runat="server" 
+        ControlToValidate="txtOccupation" ErrorMessage="*" style="color: #CC0000"></asp:RequiredFieldValidator>
+
+    </td>
+</tr>
+
+<tr>
+<td style="text-align: left">
+
+    Postal Address: </td>
+<td style="text-align: left">
+
+    &nbsp;</td>
+<td  style="text-align: left">
+
+    <asp:TextBox ID="txtPostalAddress" Width="251px" runat="server"></asp:TextBox>
+
+    <asp:RequiredFieldValidator  ID="RequiredFieldValidator5" runat="server" 
+        ErrorMessage="*" style="color: #CC0000" ControlToValidate="txtPostalAddress"></asp:RequiredFieldValidator>
+
+    </td>
+    <td style="text-align: left">
+    
+        Contact No:</td>
+        <td style="text-align: left">
+        
+    <asp:TextBox ID="txtPostalPhone" Width="250px" runat="server"  MaxLength="13" 
+        style="text-align: left"></asp:TextBox>
+
+
+            <asp:RequiredFieldValidator ID="RequiredFieldValidator12" runat="server" 
+                ControlToValidate="txtPostalPhone" ErrorMessage="*" style="color: #CC0000"></asp:RequiredFieldValidator>
+
+
+</td>
+</tr>
+
+<tr>
+<td style="text-align: left">
+
+    Perm. Address: </td>
+<td style="text-align: left">
+
+    &nbsp;</td>
+<td  style="text-align: left">
+
+    <asp:TextBox ID="txtPermAddress" Width="251px" runat="server"></asp:TextBox>
+
+    <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" 
+        ControlToValidate="txtPermAddress" ErrorMessage="*" style="color: #CC0000"></asp:RequiredFieldValidator>
+
+    </td>
+    <td style="text-align: left">
+    
+        Contact No:</td>
+        <td style="text-align: left">
+        
+    <asp:TextBox ID="txtPermPhone" Width="250px" runat="server"  MaxLength="13"
+        style="text-align: left"></asp:TextBox>
+
+
+            <asp:RequiredFieldValidator ID="RequiredFieldValidator11" runat="server" 
+                ControlToValidate="txtPermPhone" ErrorMessage="*" style="color: #CC0000"></asp:RequiredFieldValidator>
+
+
+</td>
+</tr>
+
+
+<tr>
+<td style="text-align: left">
+
+    Office Address: </td>
+<td style="text-align: left">
+
+    &nbsp;</td>
+<td  style="text-align: left">
+
+    <asp:TextBox ID="txtOfficeAddress" Width="251px" runat="server"></asp:TextBox>
+
+    <asp:RequiredFieldValidator ID="RequiredFieldValidator7" runat="server" 
+        ControlToValidate="txtOfficeAddress" ErrorMessage="*" style="color: #CC0000"></asp:RequiredFieldValidator>
+
+    </td>
+    <td style="text-align: left">
+    
+        Contact No:</td>
+        <td style="text-align: left">
+        
+    <asp:TextBox ID="txtOfficePhone" Width="250px" runat="server"  MaxLength="13"
+        style="text-align: left"></asp:TextBox>
+
+
+            <asp:RequiredFieldValidator ID="RequiredFieldValidator10" runat="server" 
+                ControlToValidate="txtOfficePhone" ErrorMessage="*" style="color: #CC0000"></asp:RequiredFieldValidator>
+
+
+</td>
+</tr>
+
+
+
+<tr>
+<td style="text-align: left">
+
+    Father&#39;s Address: </td>
+<td style="text-align: left">
+
+    &nbsp;</td>
+<td  style="text-align: left">
+
+    <asp:TextBox ID="txtFatherAddress" Width="251px" runat="server"></asp:TextBox>
+
+    <asp:RequiredFieldValidator ID="RequiredFieldValidator8" runat="server" 
+        ControlToValidate="txtFatherAddress" ErrorMessage="*" style="color: #CC0000"></asp:RequiredFieldValidator>
+
+    </td>
+    <td style="text-align: left">
+    
+        Contact No:</td>
+        <td style="text-align: left">
+        
+    <asp:TextBox ID="txtFatherPhone" Width="250px" runat="server"  MaxLength="13"
+        style="text-align: left"></asp:TextBox>
+
+
+            <asp:RequiredFieldValidator ID="RequiredFieldValidator15" runat="server" 
+                ControlToValidate="txtFatherPhone" ErrorMessage="*" style="color: #CC0000"></asp:RequiredFieldValidator>
+
+
+</td>
+</tr>
+
+
+
+<tr>
+<td style="text-align: left">
+
+    DOB: (D/M/Y)</td>
+<td style="text-align: left">
+
+    &nbsp;</td>
+<td  style="text-align: left">
+
+<asp:DropDownList ID="ddlday" Width="80px" runat="server">
+</asp:DropDownList>
+|
+<asp:DropDownList ID="ddlmonth" Width="80px" runat="server">
+</asp:DropDownList>
+|
+<asp:DropDownList ID="ddlyear" Width="80px" runat="server">
+</asp:DropDownList>
+
+    </td>
+    <td style="text-align: right">
+    <asp:CheckBox ID="chkCitizen" class="chkCitizen" runat="server" Checked="true" Text=" " />
+    </td>
+        <td style="text-align: left">
+        
+            Are you Pakistani?</td>
+</tr>
+
+
+
+<tr>
+<td style="text-align: left">
+
+    Email Address:</td>
+<td style="text-align: left">
+
+    &nbsp;</td>
+<td  style="text-align: left">
+
+    <asp:TextBox ID="txtEmailAddress" Width="250px" runat="server" 
+        style="text-align: left"></asp:TextBox>
+
+    <asp:RequiredFieldValidator ID="RequiredFieldValidator16" runat="server" 
+        ControlToValidate="txtEmailAddress" ErrorMessage="*" 
+        style="color: #CC0000"></asp:RequiredFieldValidator>
+
+    </td>
+    <td style="text-align: left">
+        Gender:</td>
+        <td style="text-align: left">
+        
+        <asp:RadioButtonList ID="rbGender" runat="server" 
+            RepeatDirection="Horizontal" Width="100px" style="font-weight: 700">
+        <asp:ListItem Selected="True" Value="Male">Male</asp:ListItem>
+        <asp:ListItem Value="Female">Female</asp:ListItem>
+    </asp:RadioButtonList>
+    </td>
+</tr>
+
+
+
+<tr>
+<td style="text-align: left" colspan="5">
+<center>
+<br />
+<table class="tblPakistan">
+<tr>
+<td>
+    <strong>Province</strong>:
+</td>
+<td>
+
+<asp:DropDownList ID="ddlProvince" class="ddlprovince" Width="150px" runat="server">
+</asp:DropDownList>
+    
+</td>
+<td>
+    <strong>City</strong>:
+</td>
+<td>
+<asp:DropDownList ID="ddlCity" class="ddlcity" Width="150px" runat="server">
+</asp:DropDownList>
+</td>
+<td>
+    <strong>District</strong>:
+</td>
+<td>
+<asp:DropDownList ID="ddlDistrict" class="ddldistrict" Width="150px" runat="server">
+</asp:DropDownList>
+</td>
+</tr>
+</table>
+    <br />
+<br />
+    </center>
+    </td>
+</tr>
+
+
+
+<tr>
+<td style="text-align: left;" colspan="3">
+    
+    Are you free pecuniary 
+            embarrassments?
+    </td>
+    <td style="text-align: right">
+        <asp:RadioButtonList ID="RadioButtonList1" runat="server" 
+            RepeatDirection="Horizontal" Width="100px" style="font-weight: 700">
+        <asp:ListItem Value="True">Yes</asp:ListItem>
+        <asp:ListItem Value="False">No</asp:ListItem>
+    </asp:RadioButtonList>
+    </td>
+    <td>
+        &nbsp;</td>
+</tr>
+
+
+
+<tr>
+<td style="text-align: left" colspan="5">
+   If you are under liability to repay money advance
+by an institution or party for your education of any 
+other purpose, state the particulars.
+</td>
+</tr>
+
+
+
+<tr>
+<td style="text-align: left" colspan="5">
+
+    <asp:TextBox ID="txtReasonLiability" Width="790px" runat="server" Text="Not Applicable" 
+        TextMode="MultiLine"></asp:TextBox>
+
+</td>
+</tr>
+
+
+
+<tr>
+<td style="text-align: left" colspan="3">
+Have you been convicted and sentenced by any Court
+of Law ? 
+    <br />
+    If so, an attested copy of the judgment should
+be attached. 
+    
+</td>
+<td>
+<asp:RadioButtonList ID="RadioButtonList2" runat="server"  
+            RepeatDirection="Horizontal" Width="100px" style="font-weight: 700">
+        <asp:ListItem Value="True">Yes</asp:ListItem>
+        <asp:ListItem Value="False">No</asp:ListItem>
+    </asp:RadioButtonList>
+</td>
+</tr>
+
+
+
+
+<tr>
+<td style="text-align: left" colspan="5">
+Give details of the immoveable property possessed by
+You. 
+</td>
+</tr>
+
+
+
+<tr>
+<td style="text-align: left" colspan="5">
+
+    <asp:TextBox ID="txtImmvoeablePro" Width="790px" runat="server" Text="Not Applicable"
+        TextMode="MultiLine"></asp:TextBox>
+
+    </td>
+</tr>
+
+
+
+<tr>
+<td style="text-align: left" colspan="5">
+
+    If appointed, how much period do you require before joining the post?
+
+    <asp:DropDownList ID="ddlday0" Width="80px" runat="server">
+</asp:DropDownList>
+<asp:DropDownList ID="ddlmonth0" Width="80px" runat="server">
+</asp:DropDownList>
+<asp:DropDownList ID="ddlyear0" Width="80px" runat="server">
+</asp:DropDownList>
+
+    </td>
+</tr>
+
+
+
+<tr>
+<td style="text-align: left" colspan="3">
+    
+    Are you willing to accept the minimum initial pay offered?</td>
+    <td style="text-align: right">
+        <asp:RadioButtonList ID="rbPayAccepted" runat="server" 
+            RepeatDirection="Horizontal" Width="100px" style="font-weight: 700">
+        <asp:ListItem Value="True">Yes</asp:ListItem>
+        <asp:ListItem Value="False">No</asp:ListItem>
+    </asp:RadioButtonList>
+    </td>
+    <td>
+        &nbsp;</td>
+</tr>
+
+
+
+<tr>
+<td style="text-align: left" colspan="5">
+
+    If not state what is the lowest initial pay that you would accept?
+        
+    <asp:TextBox ID="txtRequiredPay" Width="76px" runat="server" onkeypress="return isNumberKey(event)" Text="0"
+        style="text-align: left"></asp:TextBox>
+
+
+    </td>
+</tr>
+
+
+
+<tr>
+<td style="text-align: left" colspan="3">
+    
+    Are you an accepted candidate for any post under Government or otherwise?</td>
+    <td style="text-align: right">
+        <asp:RadioButtonList ID="rbIsAlreadyApplied" runat="server" 
+            RepeatDirection="Horizontal" Width="100px" style="font-weight: 700">
+        <asp:ListItem Value="True">Yes</asp:ListItem>
+        <asp:ListItem Value="False">No</asp:ListItem>
+    </asp:RadioButtonList>
+    </td>
+    <td>
+        &nbsp;</td>
+</tr>
+
+
+
+<tr>
+<td style="text-align: center" colspan="5">
+
+    If so, give particulars.<asp:TextBox ID="govtEmployeeDetail" Width="641px" 
+        runat="server" Text="Not Applicable"></asp:TextBox>
+
+    </td>
+</tr>
+
+
+
+
+<tr>
+<td style="text-align: left" colspan="3">
+    
+    Have you applied for any post advertised by the University? </td>
+    <td style="text-align: right">
+        <asp:RadioButtonList ID="rbisAlreadyApplied1" runat="server" 
+            RepeatDirection="Horizontal" Width="100px" style="font-weight: 700">
+        <asp:ListItem Value="True">Yes</asp:ListItem>
+        <asp:ListItem Value="False">No</asp:ListItem>
+    </asp:RadioButtonList>
+    </td>
+    <td>
+        &nbsp;</td>
+</tr>
+
+
+
+<tr>
+<td style="text-align: center" colspan="5">
+
+    If so, give particulars.<asp:TextBox ID="resultUni" Width="641px" 
+        runat="server" Text="Not Applicable"></asp:TextBox>
+
+    </td>
+</tr>
+
+<tr>
+<td style="text-align: center" colspan="5">
+
+    Additional remarks :- <asp:TextBox ID="txtAdditionalRemarks" Width="641px" 
+        runat="server" Text="Not Applicable"></asp:TextBox>
+
+    </td>
+</tr>
+
+<tr>
+<td style="text-align: left" colspan="3">
+    
+    Are you married? </td>
+    <td style="text-align: right">
+        <asp:RadioButtonList ID="rbMaried" runat="server" 
+            RepeatDirection="Horizontal" Width="100px" style="font-weight: 700">
+        <asp:ListItem Value="True">Yes</asp:ListItem>
+        <asp:ListItem Value="False">No</asp:ListItem>
+    </asp:RadioButtonList>
+    </td>
+    <td>
+        &nbsp;</td>
+</tr>
+
+
+<tr>
+<td style="text-align: left" colspan="5">
+
+    PEC/PCATP Registration No:&nbsp;
+        
+    <asp:TextBox ID="txtPecNo" Width="156px" runat="server" Text="" 
+       
+        style="text-align: left"></asp:TextBox>
+
+
+    &nbsp;and issue Date
+        
+    <asp:TextBox ID="txtIssueDate" Width="122px" runat="server"  
+       
+        style="text-align: left"></asp:TextBox>
+
+
+    </td>
+</tr>
+
+
+
+<tr>
+<td style="text-align: left" colspan="5" runat="server" id="tdtotal" visible="false">
+
+    NTS/GAT.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Total Marks:&nbsp;
+        
+    <asp:TextBox ID="txtNTSTotal" Width="76px" runat="server" 
+        onkeypress="return isNumberKey(event)" Text="0"
+        style="text-align: left"></asp:TextBox>
+
+
+    &nbsp;Obtained Marks :
+        
+    <asp:TextBox ID="txtNtsObtained" Width="76px" runat="server" 
+        onkeypress="return isNumberKey(event)" Text="0"
+        style="text-align: left"></asp:TextBox>
+
+
+    </td>
+</tr>
+
+
+
+<tr>
+<td style="text-align: center" colspan="5">
+
+    <asp:Button ID="cmdSave" runat="server" style="text-align: center" 
+        Text="Save Information" Width="268px" />
+
+    </td>
+</tr>
+
+
+
+<tr>
+<td style="text-align: center" colspan="5">
+
+<asp:Label ID="lblMessage" runat="server" Text="" 
+        
+        
+        style="font-weight: 700; text-decoration: underline; color: #FF0000; font-size: medium"></asp:Label>
+
+    </td>
+</tr>
+
+
+
+</table>
+ <asp:GridView ID="gvCity" class="gvCity" Visible="true" runat="server">
+        </asp:GridView>
+        <asp:GridView ID="gvdist" class="gvdist" Visible="true" runat="server">
+        </asp:GridView>
+         <asp:HiddenField ID="ddldistHidden" Value="nothing" Runat="Server" />
+    <asp:HiddenField ID="ddlCityHidden" Value="nothing" Runat="Server" />
+
+</center>
+    
+
+</div>
+
